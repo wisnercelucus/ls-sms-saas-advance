@@ -1,0 +1,48 @@
+      <footer>
+        {% load static %}
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lity/2.4.0/lity.min.js" integrity="sha256-rr6XKdaA3InL/R1iKt/B+un4oU/c23+5Rxubx7qO5ts=" crossorigin="anonymous"></script>
+        <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+        <!--<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>-->
+        <!--<script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js"></script>-->
+       
+
+        <script src="{% static 'js/main.js' %}"></script>
+        <!--<script src="{% static 'js/preview_link.js' %}"></script>-->
+
+      </footer>
+    <script>
+        $(document).ready(function(){
+           var timer;
+           var searchInterval = 500;
+           var searchForm =  $("#navbar-search-feed-input")
+           var query ="";
+           searchForm.keyup(function(event){
+            query = $(this).val()
+            clearTimeout(timer)
+            timer = setTimeout(doSearch, searchInterval)
+
+           })
+
+           searchForm.keydown(function(event){
+            query = $(this).val()
+            clearTimeout(timer)
+
+           })
+
+           function doSearch(){
+            if(query){
+               var url = '/feed/search/?q=' + query;
+               document.location.href = url;
+
+            }
+           }
+
+        })
+
+    </script>

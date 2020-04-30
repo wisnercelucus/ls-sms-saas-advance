@@ -1,0 +1,15 @@
+{% extends 'school/temp_index.html' %}
+
+{% block title %}
+    Academic year #{{ academic_year.id }} - detail
+{% endblock %}
+
+    {% block school_content %}
+    {% load static %}
+        <div class="container">
+            <p>Your are viewing the academic year <strong>{{ academic_year.name }}</strong> detail page</p>
+            <p>Name : {{ academic_year.name }}</p>
+            <p>Start : {{ academic_year.start_date }}</p>
+            <p>End date : {{ academic_year.end_date }}</p>      
+        </div>      
+    {% endblock %}

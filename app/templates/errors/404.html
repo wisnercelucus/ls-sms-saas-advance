@@ -1,0 +1,10 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+Error 404 | School Name
+{% endblock%}
+
+{% block maincontent %}
+	<h1>Error 404</h1>
+	<p>Sorry, the requested page is not found. If you try to go to the <a href="{% url 'school:index' %}">homepage</a></p>
+{% endblock %}

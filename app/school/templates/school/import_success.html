@@ -1,0 +1,14 @@
+{% extends 'school/base.html' %}
+
+	{% block title %}
+		Uplead success | {{ site_name }}
+	{% endblock %}
+
+	{% block school_content %}
+
+
+    <p><a href="{% url 'school:index' %}">{{ detailed }}</a></p>
+	  <p><a href="{% url 'school:index' %}">Return to home</a></p>
+    </div> 
+
+	{% endblock %}

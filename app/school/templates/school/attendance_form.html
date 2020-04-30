@@ -1,0 +1,24 @@
+{% extends 'school/temp_index.html' %}
+
+{% block title %}
+   Insert new Attendance | {{ site_name }}
+{% endblock %}
+
+    {% block school_content %}
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Add new attendance</h1><hr>
+                <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" name="submit" value="Save" class="btn btn-default" />
+            </form>       
+            </div>
+        </div>
+     
+    </div>
+        
+    {% endblock %}

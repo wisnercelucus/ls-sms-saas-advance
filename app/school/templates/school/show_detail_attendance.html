@@ -1,0 +1,15 @@
+{% extends 'school/temp_index.html' %}
+
+{% block title %}
+    attendance #{{ attendance.id }} - detail
+{% endblock %}
+
+    {% block school_content %}
+    {% load static %}
+        <div class="container">
+            <p>Date : {{ attendance.date }}</p>
+            <p>Attended : {{ attendance.attended }}</p>
+            <p>Address : {{ attendance.remarks }}</p>   
+            <p>Pupil first name : {{ attendance.pupil.first_name }}</p>     
+       </div>      
+    {% endblock %}

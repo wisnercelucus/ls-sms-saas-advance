@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Pacifico');
+
+
+.login {
+  min-height: 100vh;
+  font-family: montserrat;
+  background-image: linear-gradient(90deg, rgba(210,28,203,1) 0%, rgba(1,4,69,1) 100%);
+}
+
+.form-signin {
+  margin-top: 40px;
+  width: 360px;
+  max-width: 100%;
+  padding: 20px 50px;
+  border: 1px solid rgba(210,28,203,0.6);
+  border-radius: 10px;
+}
+
+.form-signin .login-avatar{
+    text-align: center;
+    width: 100%;
+    margin-bottom: 40px;
+}
+.form-signin .login-avatar img{
+  width: 70px;
+}
+
+.form-signin-heading {
+  color:#fff;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.form-signin  label{
+  font-size: 17px;
+  color: #fff;
+}
+.reset-password-link{
+  color: #fff;
+  font-size: 15px;
+}
+.reset-password-link a{
+
+  color: #1ce;
+}
+
+.form-signin .btn{
+  background-image: linear-gradient(90deg, rgba(210,28,203,1) 0%, rgba(1,4,69,1) 100%);
+  border: none !important;
+}
+.form-signin .btn:focus{
+  border: none !important;
+  
+}
+.form-signin .form-group{
+  width: 100%;
+  margin-bottom: 30px;
+}
+.form-signin .form-group div{
+  border-bottom: 2px solid #adadad !important;
+}
+.form-signin .form-group div input{
+  border: none !important;
+  width: 100%;
+  border-radius: none !important;
+  font-size: 15px;
+  outline: none !important;
+  background-image: linear-gradient(to right, rgba(210,28,203,1) 30%, rgba(1,4,69,1) 100%);
+}
+.form-signin .form-group div input:focus{
+  border: none !important;
+  font-size: 15px;
+  color: #fff;
+  outline: none !important;
+  background-image: linear-gradient(to right, rgba(210,28,203,1) 30%, rgba(1,4,69,1) 100%);
+}

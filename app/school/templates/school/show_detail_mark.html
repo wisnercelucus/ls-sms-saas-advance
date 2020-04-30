@@ -1,0 +1,15 @@
+{% extends 'school/temp_index.html' %}
+
+{% block title %}
+    Mark #{{ mark.id }} - detail
+{% endblock %}
+
+    {% block school_content %}
+    {% load static %}
+        <div class="container">
+            <p>Topic : {{ mark.course }}</p>
+            <p>Pupil : {{ mark.pupil}}</p>
+            <p>Term : {{ mark.term }}</p>  
+            <p>Mark : {{ mark.mark }}</p> 
+       </div>      
+    {% endblock %}

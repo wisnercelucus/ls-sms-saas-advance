@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+  
+  {% load static %}      
+    {% block stylesheet %}
+    	<link rel="stylesheet" href="{% static 'school/styles.css' %} " type ="text/css">
+    {% endblock %}
+{% block maincontent %}
+    <body class="school">
+    	<section class="nav-bar">
+        {% include 'school/_top_nav.html' %}
+      </section>
+      <div class="row">
+        <diw class="col-md-2">
+          {% include "school/_side_bar.html" %}
+        </diw>
+        <div class="col-md-10">
+	      {% block school_content %}
+		
+        {% endblock %}
+        </div>
+     </div>
+       {% include 'layouts/_footer.html' %}
+    </body>
+{% endblock %}

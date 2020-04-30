@@ -1,0 +1,165 @@
+{% extends 'layouts/base.html' %}
+
+        {% block title %}
+            Welcome | {{ site_name }}
+        {% endblock %}
+
+{% block maincontent %}
+        {% load static %}
+    <body class="index">
+        <section class="nav-bar">
+        {% include 'layouts/_top_nav.html' %}
+        </section>
+        <section class="donate-section">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+            <form action="{% url 'donate:process-donation' %}" class="charge-form" method="post" id="payment-form">
+              {% csrf_token %}
+              <div class="row">
+               <div  class="col-md-6"> 
+                <div class="form-group">
+                <label for="name">
+                  Name
+                </label>
+                  <input class="form-control StripeElement" name="name" id="name" type="text" placeholder="Your full name" required>
+               </div>
+             </div>
+             <div  class="col-md-6"> 
+                <div class="form-group">
+                <label for="email">
+                  Email
+                </label>
+                  <input type="email" class="form-control StripeElement" id="email" aria-describedby="emailHelp" placeholder="Enter email" name="email" required>
+                  <small id="emailHelp" class="form-text text-muted text-white">We'll never share your email with anyone else.</small>
+               </div>
+             </div>
+             </div>
+
+              <div class="row amount-row">
+              <div  class="col-md-6"> 
+              <div class="form-group">
+              <label for="select_amount">
+                  Select amount
+              </label>
+              <select class="form-control StripeElement" name="select_amount" id="select_amount" required>
+                <option value="10">$10 -- Good</option>
+                <option value="25">$25 -- Great</option>
+                <option value="45">$45 -- Amazing</option>
+                <option value="custom">Custom amount</option>
+              </select>
+              <small id="emailHelp" class="form-text text-muted text-white">{{ message_select }}</small>
+             </div>
+            </div>
+             <div  class="col-md-6"> 
+                <div class="form-group">
+                <label for="custom_amount">
+                  Custom amount
+                </label>
+                  <input type="number" class="form-control StripeElement" id="custom_amount" name="custom_amount" min="0" step="1" placeholder="0">
+              <small id="emailHelp" class="form-text text-muted text-white">{{ message_custom }}</small>
+               </div>
+             </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group card-input">
+                <label for="card-element">
+                  Credit or debit card
+                </label>
+                  <div id="card-element"classs="StripeElement StripeElement--focus">
+                  <!-- A Stripe Element will be inserted here. -->
+                  </div>
+               </div>
+                <!-- Used to display form errors. -->
+                <div id="card-errors" role="alert"></div>
+
+              </div>
+              <button type="submit" class="btn btn-primary btn-charge">Submit Donation</button>
+            </form>
+          </div>
+          <div class="col-md-6">
+            <h1>Engaging message</h1>
+          </div>
+      </div>
+      </div>
+
+    </section>
+    <script>
+        // Create a Stripe client.
+      	var stripe = Stripe('pk_test_FKVFWKITQGi5PMsdh6pvSYFK00x5t32pYi');
+
+      	// Create an instance of Elements.
+      	var elements = stripe.elements();
+
+      	// Custom styling can be passed to options when creating an Element.
+      	// (Note that this demo uses a wider set of styles than the guide below.)
+      	var style = {
+      		base: {
+      			color: '#32325d',
+      			fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      			fontSmoothing: 'antialiased',
+      			fontSize: '16px',
+      			'::placeholder': {
+      				color: '#aab7c4'
+      			}
+      		},
+      		invalid: {
+      			color: '#fa755a',
+      			iconColor: '#fa755a'
+      		}
+      	};
+
+      	// Create an instance of the card Element.
+      	var card = elements.create('card', {style: style});
+
+      	// Add an instance of the card Element into the `card-element` <div>.
+      	card.mount('#card-element');
+
+      	// Handle real-time validation errors from the card Element.
+      	card.addEventListener('change', function(event) {
+      		var displayError = document.getElementById('card-errors');
+      		if (event.error) {
+      			displayError.textContent = event.error.message;
+      		} else {
+      			displayError.textContent = '';
+      		}
+      	});
+
+      	// Handle form submission.
+      	var form = document.getElementById('payment-form');
+      	form.addEventListener('submit', function(event) {
+      		event.preventDefault();
+
+      		stripe.createToken(card).then(function(result) {
+      			if (result.error) {
+      				// Inform the user if there was an error.
+      				var errorElement = document.getElementById('card-errors');
+      				errorElement.textContent = result.error.message;
+      			} else {
+      				// Send the token to your server.
+      				stripeTokenHandler(result.token);
+      			}
+      		});
+      	});
+
+      	// Submit the form with the token ID.
+      	function stripeTokenHandler(token) {
+      		// Insert the token ID into the form so it gets submitted to the server
+      		var form = document.getElementById('payment-form');
+      		var hiddenInput = document.createElement('input');
+      		hiddenInput.setAttribute('type', 'hidden');
+      		hiddenInput.setAttribute('name', 'stripeToken');
+      		hiddenInput.setAttribute('value', token.id);
+      		form.appendChild(hiddenInput);
+
+      		// Submit the form
+      		form.submit();
+      	}
+
+      </script>
+
+      {% include 'layouts/_footer.html' %}
+    </body>
+
+{% endblock %}

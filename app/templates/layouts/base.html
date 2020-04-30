@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {%load static %}
+    <title>
+
+        {% block title %}
+            School Name
+        {% endblock %}
+
+    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+   <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" >
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" >
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lity/2.4.0/lity.min.css" integrity="sha256-kgOoigZTP1lSBr7QDdEQ4mcwFAi0pvmCcvfcnRYHicc=" crossorigin="anonymous" />
+
+
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" type="text/css" >
+    <link href="{% static 'css/signin.css' %}" rel="stylesheet" type="text/css" >
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css" >
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <link rel="icon" href="{% static 'site-logo/smartlylogo.png' %}">
+
+    {% block stylesheet %}
+    {% endblock %}
+
+  </head>
+
+    {% block maincontent %}
+
+    {% endblock %}
+   <script type="text/javascript">
+    function getParameterByName(name, url) {
+            if (!url) {
+              url = window.location.href;
+            }
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    function loadPosts(postContainerId){
+
+    var query = getParameterByName('q')
+    var postList = [];
+    var nextPostListUrl;
+    var postContainer;
+    if(postContainerId){
+
+        postContainer = $("#" + postContainerId)
+    }else{
+
+        postContainer = $("#post-container")
+
+    }
+    var initialUrl;
+
+    if (postContainer.attr("data-url")){
+        initialUrl = postContainer.attr("data-url");
+    }else{
+        initialUrl= "/feed/api/posts";
+    }
+
+
+
+      function updateHashLinks(){
+          $(".card-body").each(function(data){
+              var hashtagRegex = /(^|\s)#([\w\d-]+)/g
+              var htmlreplace = $(this).html()
+              var newText = htmlreplace.replace(hashtagRegex, "$1<a href='/feed/tags/$2/'>#$2</a>")
+              $(this).html(newText)
+          })
+      }
+
+      function updateUsernameLinks(){
+          $(".card-body").each(function(data){
+              var usernameRegex = /(^|\s)@([\w\d-]+)/g
+              var htmlreplace = $(this).html()
+              var newText = htmlreplace.replace(usernameRegex, "$1<a href='/accounts/profile/$2/'>@$2</a>")
+              $(this).html(newText)
+
+          })
+      }
+
+
+      function formatApiDetailUrl(url){
+        var url_parts = url.split("/");
+        var formated_url = '/feed/api/' + url_parts[2] + '/' + url_parts[3] + '/' + url_parts[4]
+        return formated_url
+      }
+
+
+
+      $(document.body).on("click", ".btn-like", function(e){
+            e.preventDefault()
+            var this_ = $(this)
+            var postLikeUrl = formatApiDetailUrl(this_.attr("href"))
+
+            $.ajax({
+                  method: 'GET',
+                  url: postLikeUrl,
+                  success: function(data){
+
+                    if(data.liked){
+                       this_.text("Unlike")
+                       $('#likes-shared').text("Likes "+ "("+ data.likes+")") 
+                       $('#likes-origin').text("Likes "+ "("+ data.likes+")") 
+                   }else{
+                        this_.text("Like")
+                        $('#likes-shared').text("Likes "+ "("+ data.likes+")") 
+                        $('#likes-origin').text("Likes "+ "("+ data.likes+")") 
+                   }
+
+                  },
+
+                  error: function(data){
+                    console.log("An error occured")
+                    console.log("data")
+                  }
+             })
+            
+      })
+
+      $(document.body).on("click", ".btn-share", function(e){
+        event.preventDefault()
+        var url_share_api = $(this).attr("href")
+        var formated_url = formatApiDetailUrl(url_share_api)
+
+        $.ajax({
+          method: 'GET',
+          url: formated_url,
+          success: function(data){
+            console.log("success")
+            attachPost(data, true, true)
+            if(initialUrl == 'feed/api/posts'){    
+                updateHashLinks()
+                updateUsernameLinks()
+            }
+
+          },
+          error: function(data){
+            console.log("An error occured")
+            console.log(data)
+          }
+        })
+
+      })
+
+      function attachPost(postValue, prepend, share){
+          var dateDisplay = postValue.date_display;
+          var timeSince = postValue.timesince;
+          var postContent = postValue.content;
+          var postUrl = postValue.url;
+          var postUser = postValue.user;
+          var postFormattedHtml;
+          var verb='Like'
+
+          if(postValue.did_like){
+            verb = 'Unlike'
+          }
+
+          var imageContent;
+          if (postValue.image){
+            imageContent = "<img src='"+ postValue.image +"' class=\"img-fluid\" alt=\"...\">"
+          }else{
+            imageContent = ''
+          }
+          
+          if(share && postValue.parent){
+            var parentPost = postValue.parent;
+            if(postValue.parent.image){
+              imageContent = "<img src='"+ postValue.parent.image +"' class=\"img-fluid\" alt=\"...\">"
+            }else{
+              imageContent = ''
+            }
+
+            postFormattedHtml = "<div class=\"card post-container\"><div class=\"card-header\">" + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">"+ postUser.first_name + " " + postUser.last_name + "</a> | " + timeSince + "<small> Shared from</small></div><div class='card wrap-parent'><div class=\"card-header\"> " + "<a href='" + parentPost.user.url +   "'>"+ "<img src=\"" + parentPost.user.image + " \" alt=\"Profile image of" + parentPost.user.first_name + " "+ parentPost.user.last_name + "\" class=\"avatar-xs\">" + parentPost.user.first_name + " " + parentPost.user.last_name + "</a>"+ " | " + parentPost.timesince + " </div><div class=\"card-body card-body-content\">" + parentPost.content + "</div>" + imageContent + "</div><div class='wrap-post-performance'><span class='likes' id='likes-shared'>" + "Likes (" + postValue.likes +")"+ "</span><span class='comments' id=\"comments-shared\">"+ 'Comments (0)' +"</span></div><div class='card-footer'>"+ "<a href='"+  parentPost.url +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'>Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb +"</a>"+"</div></div>"
+
+          }else{
+
+            postFormattedHtml = "<div class=\"card post-container\" style=\"width: 33rem;\"><div class=\"card-header\"> " + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">" + postUser.first_name + " " + postUser.last_name + "</a>" + " | " + timeSince + "</div> <div class=\"card-body card-body-content\" >"+ postContent +"</div>"+ imageContent +  "<div class='wrap-post-performance'><span class='likes' id='likes-origin'>" + "Likes (" + postValue.likes +")" + "</span><span class=\"comments\" id='comments-origin'>"+ 'comments (0)' +"</span></div><div class='card-footer'>"+ "<a href='"+  postUrl +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'>Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb +"</a>" +"</div>" + " </div>"
+          }
+
+
+          if (prepend==true){
+            postContainer.prepend(postFormattedHtml)
+          } else {
+            postContainer.append(postFormattedHtml)
+         }
+      }
+
+      function parsePosts(){
+        if (postList == 0) {
+           postContainer.text("No post currently found.")
+        } else {
+          // tweets exist, parse & display them
+         $.each(postList, function(key, value){
+              var postKey = key;
+              if(value.parent){
+                attachPost(value, false, true)
+              }else{
+                attachPost(value)
+              }
+
+          })
+        }
+      }
+
+
+    function fetchPosts(url){
+      var fetchUrl;
+      if(!url){
+        fetchUrl = initialUrl
+      }else{
+        fetchUrl = url
+      }
+
+    $.ajax({
+         url: fetchUrl,
+         data: {
+            'q': query
+         },
+         method: 'GET',
+         success: function(data){
+            postList = data.results
+            if(data.next){
+              nextPostListUrl = data.next
+            }else{
+              $("#view-more-posts-btn").css("display", "None")
+            }
+            parsePosts()
+            updateHashLinks()
+            updateUsernameLinks()
+         },
+         error: function(data){
+            console.log("Error")
+            console.log(data)
+         }
+
+        })
+    }
+
+
+    fetchPosts()
+
+    $("#view-more-posts-btn").click(function(event){
+      event.preventDefault()
+      if(nextPostListUrl){
+        fetchPosts(nextPostListUrl)
+      }
+
+    })
+    /*
+    var authorisedNumberOfChars = 250;
+    var currentNumberOfChars = 250;
+        $("#post-form textarea").keyup(function(event){
+            var postValue = $(this).val()
+            currentNumberOfChars = authorisedNumberOfChars - postValue.length;
+            var postCharsLeft = $("#postCharsLeft")
+
+            if(currentNumberOfChars > 0){
+
+                postCharsLeft.text(currentNumberOfChars + " characters left.");
+
+                postCharsLeft.removeClass("grey-class")
+                postCharsLeft.removeClass("red-class")
+                postCharsLeft.addClass("green-class")
+
+            }else if(currentNumberOfChars == 0){
+                postCharsLeft.text(currentNumberOfChars + " limit reached.");
+                postCharsLeft.removeClass("green-class")
+                postCharsLeft.removeClass("red-class")
+                postCharsLeft.addClass("grey-class")
+
+            }else{
+                postCharsLeft.text(currentNumberOfChars + " limit exceeded.");
+                postCharsLeft.removeClass("green-class")
+                postCharsLeft.removeClass("grey-class")
+                postCharsLeft.addClass("red-class")
+            }
+
+        })
+
+
+        $("#post-form").append('<span id ="postCharsLeft">' + authorisedNumberOfChars + " characters left" + '</span>');
+
+        */
+
+        $("#post-form").submit(function(event){
+            event.preventDefault()
+            var this_ = $(this)
+            var formData;
+            var image = $('#id_image')[0].files[0]
+            if(image){
+            for (var instance in CKEDITOR.instances)
+                CKEDITOR.instances[instance].updateElement();
+              formData = new FormData(this);
+              formData.append('image', $('#id_image')[0].files[0]);
+                $.ajax({
+                     url: '/feed/api/post/create/create_url',
+                     contentType: false,
+                     processData: false,
+                     data: formData,
+                     method: 'POST',
+                     success: function(data){
+                        CKEDITOR.instances[instance].setData('');
+                        this_.find("input[type=text], textarea").val("")
+                        attachPost(data, true)
+                        updateHashLinks()
+                        updateUsernameLinks()
+                        if (data.redirect_) {
+                            window.location.href = data.redirect_;
+                        }
+                     },
+                     error: function(data){
+                        console.log("Error")
+                        console.log(data.status)
+                     }
+
+                })
+            }else{
+
+              formData = this_.serialize()
+                for (var instance in CKEDITOR.instances)
+                CKEDITOR.instances[instance].updateElement();
+                 var formData = $("#post-form").serialize();
+                $.ajax({
+                     url: '/feed/api/post/create/create_url',
+                     data: formData,
+                     method: 'POST',
+                     success: function(data){
+                        CKEDITOR.instances[instance].setData('');
+                        this_.find("input[type=text], textarea").val("")
+                        attachPost(data, true)
+                        updateHashLinks()
+                        updateUsernameLinks()
+                     },
+                     error: function(data){
+                        console.log("Error")
+                        console.log(data.status)
+                     }
+
+                })
+
+            }
+      
+
+        })
+    }
+</script>
+</html>

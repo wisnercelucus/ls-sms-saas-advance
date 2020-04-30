@@ -1,0 +1,15 @@
+{% autoescape off %}
+
+Hi {{ user }},
+
+Your school has been successfully on trial for 30 days!
+Here are your admin info to login:
+
+We recommand changing your password after login.
+
+Login_Page: http://{{ domain }}:8000/admin/
+
+EMAIL: {{ user }}
+PASSWORD: {{ password }}
+
+{% endautoescape %}

@@ -1,0 +1,22 @@
+{% extends 'layouts/base.html' %}
+
+        {% block title %}
+            Welcome | {{ site_name }}
+        {% endblock %}
+
+{% block maincontent %}
+        {% load static %}
+    <body class="index">
+        <section class="nav-bar">
+        {% include 'layouts/_top_nav.html' %}
+        </section>
+        <section class='post-donation'>
+        		<h1>Thank you for your support</h1>
+            <p>You have donated $USD {{ amount }}. Do you want to figure on our public donors page?</p>
+        </section>
+
+      {% include 'layouts/_right.html' %}
+      {% include 'layouts/_footer.html' %}
+    </body>
+
+{% endblock %}

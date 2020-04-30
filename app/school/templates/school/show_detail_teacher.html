@@ -1,0 +1,15 @@
+{% extends 'school/temp_index.html' %}
+
+{% block title %}
+    teacher #{{ teacher.id }} - detail
+{% endblock %}
+
+    {% block school_content %}
+    {% load static %}
+        <div class="container">
+            <p>Your are viewing the teacher <strong>{{ teacher.first_name }} {{ teacher.last_name }}</strong> detail page</p>
+            <p>Name : {{ teacher.first_name }} {{ teacher.last_name }}</p>
+            <p>Sex : {{ teacher.sex }}</p>
+            <p>Address : {{ teacher.address }}</p>      
+       </div>      
+    {% endblock %}

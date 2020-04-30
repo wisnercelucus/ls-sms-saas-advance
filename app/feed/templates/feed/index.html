@@ -1,0 +1,66 @@
+{% extends 'feed/_base.html' %}
+        
+        {% block title %}
+            Login | SMARTLY
+        {% endblock %}
+
+{% block feed_content %}
+
+<body class="feed">
+{%load static %}
+{% load crispy_forms_tags %}
+<br/>
+
+  <div class="container-fluid">
+    <div class='row'>
+        <div class='col-md-3 col-sm-3 col-xs-12' style='background-color:inherit;'>
+        <h1 style='background-color:blue;'>{{ request.user }}</h1>
+        </div>
+        <div class='col-md-6 col-sm-6 '>
+             {% if not request.GET.q %}
+                <div class=''>
+                    {% include 'feed/form.html' with form=form action_url='create_url' form_id='post-form' btn_title='Post' %}
+                </div>
+                <hr/>
+            {% endif %}
+
+            <div id="post-container" class="" data-url="/feed/api/posts/">
+                
+            </div>
+            <button id="view-more-posts-btn" class="btn btn-primary">View more posts</button>
+
+        </div>
+        <div class='col-md-3 col-sm-3 col-xs-12' style='background-color:inherit;'>
+          <h1>Polls go here</h1>
+          <p>Poll 1 ...</p>
+        <h1>Following <small>({{user.profile.get_following|length}})</small></h1>
+             {% for user in user.profile.get_following %}
+             <a href='/accounts/profile/{{ user }}'>{{ user.username }}</a><br/>
+             {% empty %}
+             <h4>Not following any users</h4>
+             {% endfor %}
+
+        <h1>Followers <small>({{ user.followed_by.all|length }})</small></h1>
+        {% for profile in user.followed_by.all %}
+          <a href='/accounts/profile/{{ profile.user.username }}'>{{ profile.user.username }}</a><br/>
+          {% empty %}
+          <h4>Not followed by any users</h4>
+        {% endfor %}
+
+        </div>
+    </div> 
+  </div>
+
+    {% include 'layouts/_footer.html' %} 
+  <script type="text/javascript">
+      $(window).on('load', function (){
+                if($("content")){
+                  CKEDITOR.replace( 'content' );
+                }  
+    });
+   
+    </script>
+
+</body>
+
+{% endblock %}

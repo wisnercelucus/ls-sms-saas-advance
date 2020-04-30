@@ -1,0 +1,37 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="{% url 'school:index' %}"><img src="{% static 'site-logo/Smartly logoyu.png' %}" alt="Site logo"></a>
+
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    
+
+    <ul class="navbar-nav ml-auto">
+      {% if user.is_authenticated %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% if user.image.url %}<img src="{{ user.image.url }}" alt="Profile image of {{ user.username }}" class="avatar-xs"> {% endif %} {{ user.first_name }} {{ user.last_name }} 
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% if request.user.is_staff or request.user.is_superuser %}
+              <a class="dropdown-item" href="/admin">Admin</a>
+              {% endif %}
+            <a class="dropdown-item" href="{% url 'user:profile' username=user.username %}">Profile</a>
+              <a class="dropdown-item" href="{% url 'user:logout' %}">Log out</a>
+            <a class="dropdown-item" href="">Change Password</a> 
+        </div>
+
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="#"></a>
+      </li>
+     {% endif %}
+    </ul>
+  </div>
+</nav>

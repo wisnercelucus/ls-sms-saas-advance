@@ -1,0 +1,50 @@
+{% extends 'school/base.html' %}
+
+{% block school_content %}
+{% load static %}
+<body class="nav-md">
+	<div class="container body">
+	<div class="main_container">
+
+{% include 'school/_admin_side_nav.html' %}
+
+{% include 'school/_admin_top_nav.html' %}
+
+<div class="right_col" role="main">
+
+{% include 'school/_tile_count.html' %}
+
+<div class="row">
+<div class="col-md-12 col-sm-12 ">
+
+{% include 'school/_progress_bar.html' %}
+
+
+</div>
+</div>
+<br />
+
+{% include 'school/_app_version.html' %}
+
+<div class="row">
+
+{% include 'school/_recent_activities.html' %}
+
+<div class="col-md-8 col-sm-8 ">
+<div class="row">
+
+{% include 'school/_students_location.html' %}
+
+</div>
+<div class="row">
+
+{% include 'school/_todos.html' %}
+
+{% include 'school/_dailly_active_users.html' %}
+
+</div>
+</div>
+</div>
+</div>
+
+{% endblock %}

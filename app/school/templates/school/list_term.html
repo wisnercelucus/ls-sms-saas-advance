@@ -1,0 +1,54 @@
+{% extends 'school/temp_index.html' %}
+
+	{% block title %}
+		Terms' list | {{ site_name }}
+	{% endblock %}
+
+    {% block display_table %}
+    {% load crispy_forms_tags %}
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <strong>Total number of terms {{ terms|length }}</strong>
+          </div>
+          <div class="panel-body">          
+              <div id="messages"></div>
+
+                <div class="pull pull-right">
+                      <a href="{% url 'school:add_new_term' %}" >
+                        <button type="button" class="btn btn-primary">
+                       <i class="fa fa-plus"></i> Add term
+                     </button></a>
+                </div>
+
+                <br /> <br /> <br />
+                
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered" id="list_term">
+               <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for term in terms %}
+                     <tr>
+                      <td><a href="{% url 'school:update_term' pk=term.pk %}">edit</a></td>
+                      <td><a href="{% url 'school:show_detail_term' pk=term.pk %}">{{ term.id }}</a></td>
+                      <td>{{ term.name }}</td>
+                      <td>{{ term.start_date }}</td>
+                      <td>{{ term.end_date }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            
+          </div>
+        </div>
+
+    {% endblock %}

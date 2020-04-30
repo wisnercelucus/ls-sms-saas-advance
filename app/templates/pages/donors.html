@@ -1,0 +1,21 @@
+{% extends 'layouts/base.html' %}
+        
+        {% block title %}
+            Welcome | {{ site_name }}
+        {% endblock %}
+
+{% block maincontent %}
+        {% load static %}
+    <body class="index">
+        <section class="nav-bar">
+        {% include 'layouts/_top_nav.html' %}
+        </section>
+        <section class='donors-content'>
+        		<h1>Donors</h1>
+        </section>
+
+      {% include 'layouts/_right.html' %}
+      {% include 'layouts/_footer.html' %}
+    </body>
+      
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'user/base.html' %}
+        
+        {% block title %}
+            Welcome | {{ site_name }}
+        {% endblock %}
+
+	   {% block userprofile_content %}
+	   {% load static %}
+
+<body>
+
+	<section class="nav-bar">
+        {% include 'feed/_top_nav.html' %}
+    </section>
+    <div class="container main-secction">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12 image-section">
+                {% if not own_profile %}
+                <a href="{% url 'user:follow' username=user.username %}" class="btn btn-follow">
+                {% if following %} Unfollow {% else %} Follow {% endif %}
+                </a>
+              {% endif %}  
+            </div>
+
+
+            <div class="col-md-12 col-sm-12 col-xs-12 profile-section-row">
+            <div class="row user-left-part">
+                <div class="col-md-3 col-sm-3 col-xs-12 user-profil-part pull-left">
+                    <div class="row ">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <a title="{{ user.username }}" href="" class="twPc-avatarLink user-image">
+                                <img alt="{{ user.username }}" src="{{ user.image.url }}" class="twPc-avatarImg">
+                            </a>
+
+
+
+                            <div class="twPc-divUser">
+                                <div class="twPc-divName">
+                                    <a href="">{{ user.username }}</a>
+                                </div>
+                                <span>
+                                    <a href="">@<span>{{ user.username }}</span></a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
+
+                        <div class="twPc-divStats">
+                                <ul class="twPc-Arrange">
+                                    <li class="twPc-ArrangeSizeFit">
+                                        <a href="" title="{{ user.post_set.all|length }} Posts">
+                                            <span class="twPc-StatLabel twPc-block">Posts</span>
+                                            <span class="twPc-StatValue">{{ user.post_set.all|length }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="twPc-ArrangeSizeFit">
+                                        <a href="" title="{{user.profile.get_following|length}} Following">
+                                            <span class="twPc-StatLabel twPc-block">Following</span>
+                                            <span class="twPc-StatValue">{{user.profile.get_following|length}}</span>
+                                        </a>
+                                    </li>
+                                    <li class="twPc-ArrangeSizeFit">
+                                        <a href="" title="{{ user.followed_by.all|length }} Followers">
+                                            <span class="twPc-StatLabel twPc-block">Followers</span>
+                                            <span class="twPc-StatValue">{{ user.followed_by.all|length }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>  
+
+                        </div>
+  
+                       
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section">
+                    
+                        <h1><a href="{{ request.user.get_absolute_url }}"> @{{ request.user.username }}</a> posts</h1>
+                        
+                    <div id="post-container" class="" data-url="/accounts/api/{{user.username}}/posts/">
+                        
+                    </div>
+                    <button id="view-more-posts-btn" class="btn btn-primary">View more posts</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+       {% include 'layouts/_footer.html' %}
+</body>
+		
+       {% endblock %}

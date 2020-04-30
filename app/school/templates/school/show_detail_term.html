@@ -1,0 +1,15 @@
+{% extends 'school/temp_index.html' %}
+
+{% block title %}
+    Term #{{ term.id }} - detail
+{% endblock %}
+
+    {% block school_content %}
+    {% load static %}
+        <div class="container">
+            <p>Your are viewing the term <strong>{{ term.name }}</strong> detail page</p>
+            <p>Name : {{ term.name }}</p>
+            <p>Start : {{ term.start_date }}</p>
+            <p>End date : {{ term.end_date }}</p>      
+        </div>      
+    {% endblock %}

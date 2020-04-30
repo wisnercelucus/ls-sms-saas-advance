@@ -1,0 +1,32 @@
+{% extends 'feed/_base.html' %}
+        
+        {% block title %}
+            Login | SMARTLY
+        {% endblock %}
+
+{% block feed_content %}
+
+<body class="feed">
+{%load static %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                {% include 'feed/form.html' with form=form action_url='create_url' btn_title='Post' %}
+            </div>
+            <div class="col-md-8">
+                
+            </div>
+        </div>
+       
+    </div>
+    {% include 'layouts/_footer.html' %} 
+      <script type="text/javascript">
+      $(window).on('load', function (){
+                if($("content")){
+                  CKEDITOR.replace( 'content' );
+                }  
+    });
+  </script>
+</body>
+
+{% endblock %}

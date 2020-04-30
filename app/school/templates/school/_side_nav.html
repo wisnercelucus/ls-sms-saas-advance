@@ -1,0 +1,172 @@
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3><a href="{% url 'school:index' %}">{{ school.short}}</a></h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                <span>Objects</span>
+                <li>
+                    <a href="#studentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Students</a>
+                    <ul class="collapse list-unstyled" id="studentSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_pupil' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_pupil' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter students</a>
+                        </li>
+                    </ul>
+                </li>
+
+               <li>
+                    <a href="#attentanceSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Attendances</a>
+                    <ul class="collapse list-unstyled" id="attentanceSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_attendance' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_attendance' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter attendances</a>
+                        </li>
+                    </ul>
+                </li>
+
+
+               <li>
+                    <a href="#markSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Exam marks</a>
+                    <ul class="collapse list-unstyled" id="markSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_mark' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_mark' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter Exam marks</a>
+                        </li>
+                    </ul>
+                </li>
+
+               <li>
+                    <a href="#parentsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Parents</a>
+                    <ul class="collapse list-unstyled" id="parentsSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_responsible' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_responsible' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter parents</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#teachersSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Teachers</a>
+                    <ul class="collapse list-unstyled" id="teachersSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_teacher' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_teacher' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter teachers</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#coursesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Courses</a>
+                    <ul class="collapse list-unstyled" id="coursesSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_course' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_course' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter courses</a>
+                        </li>
+                    </ul>
+                </li>
+
+               <li>
+                <a href="#gradesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Grades</a>
+                    <ul class="collapse list-unstyled" id="gradesSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_grade' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_grade' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter grades</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                <a href="#termsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Terms</a>
+                    <ul class="collapse list-unstyled" id="termsSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_term' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_term' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter terms</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                <a href="#acSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Academic Years</a>
+                    <ul class="collapse list-unstyled" id="acSubmenu">
+                        <li>
+                            <a href="{% url 'school:add_new_ac' %}">Add new</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'school:list_ac' %}">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Filter academic years</a>
+                        </li>
+                    </ul>
+                </li>
+ 
+                <li>
+                    <span>Finances</span>
+                    <a href="#paymentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Payments</a>
+                    <ul class="collapse list-unstyled" id="paymentSubmenu">
+                        <li>
+                            <a href="#">Add niew payment</a>
+                        </li>
+                        <li>
+                            <a href="#">View all</a>
+                        </li>
+                        <li>
+                            <a href="#">Fliter payments</a>
+                        </li>
+                    </ul>
+                </li>
+               <li>
+                    <span>Builk actions</span>
+                    <a href="#ioSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">IO</a>
+                    <ul class="collapse list-unstyled" id="ioSubmenu">
+                        <li>
+                            <a href="#">Mass import</a>
+                        </li>
+                        <li>
+                            <a href="#">Mass export</a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </nav>

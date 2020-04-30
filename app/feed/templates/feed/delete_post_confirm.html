@@ -1,0 +1,21 @@
+{% extends 'feed/_base.html' %}
+        
+        {% block title %}
+            Login | SMARTLY
+        {% endblock %}
+
+{% block feed_content %}
+
+<body class="feed">
+{%load static %}
+    <div class="container">
+        <form method="POST">
+            {% csrf_token %}
+            <p>Are you sure you wante to delete {{ object }}</p>
+            <input type="submit" value="Delete">
+        </form>
+    </div>
+    {% include 'layouts/_footer.html' %} 
+</body>
+
+{% endblock %}

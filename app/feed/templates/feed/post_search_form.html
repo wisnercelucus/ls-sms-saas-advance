@@ -1,0 +1,7 @@
+       <form class="form-inline form-center-vertical" method="GET" action="{% url 'feed:search' %}">
+       	{% csrf_token %}
+        <div class="form-group mx-sm-3 mb-2">
+          <input type="text" class="form-control" name="q" id="navbar-search-feed-input" placeholder="Search feed">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">{{ btn_title }}</button>
+      </form>

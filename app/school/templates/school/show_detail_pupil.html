@@ -1,0 +1,17 @@
+{% extends 'school/_base.html' %}
+
+{% block title %}
+    pupil #{{ pupil.pk }} - detail
+{% endblock %}
+
+    {% block school_content %}
+    {% load static %}
+    <div class="container">
+            <p>Your are viewing <strong>{{ pupil.first_name }} {{ pupil.last_name }}</strong> detail page</p>
+            <p>Name : {{ pupil.first_name }} {{ pupil.last_name }}</p>
+            <p>Sex : {{ pupil.sex }}</p>
+            <p>Address : {{ pupil.address }}</p>   
+   </div>
+        
+    {% endblock %}
+

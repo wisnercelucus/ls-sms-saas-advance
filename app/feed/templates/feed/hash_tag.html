@@ -1,0 +1,24 @@
+{% extends 'feed/_base.html' %}
+        
+        {% block title %}
+            Login | SMARTLY
+        {% endblock %}
+
+{% block feed_content %}
+
+<body class="tags">
+{%load static %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% for post in obj.get_posts %}
+                <div> {{ post.content }} </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+{% include 'layouts/_footer.html' %} 
+</body>
+
+{% endblock %}

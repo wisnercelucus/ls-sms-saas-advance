@@ -1,0 +1,10 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}
+Error 500 | School Name
+{% endblock%}
+
+{% block maincontent %}
+	<h1>Error 500</h1>
+	<p>Sorry, server error. Try to go to the <a href="{% url 'school:index' %}">homepage</a></p>
+{% endblock %}

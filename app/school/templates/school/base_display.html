@@ -1,0 +1,12 @@
+{% extends 'school/_base.html' %}
+
+	{% block school_content %}
+	{% load static %}
+	<body class="school-index">
+	    <div class="container">
+	        {% block display_table %}
+	        {% endblock %}
+	    </div>
+	</body>
+		
+    {% endblock %}

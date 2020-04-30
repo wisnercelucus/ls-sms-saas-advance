@@ -1,0 +1,35 @@
+{% extends 'user/base.html' %}
+        
+        {% block title %}
+            Login | SMARTLY
+        {% endblock %}
+
+{% block userprofile_content %}
+
+<body class="login">
+{%load static %}
+{% load crispy_forms_tags %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <form class="form-signin" method="post" action="">
+                    <div class="login-avatar">
+                        <img src="{% static 'images/login_avatar.png' %}" alt="Login avatar">
+                    </div>
+                    <h1 class="form-signin-heading">Login</h1>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                    <div class="reset-password-link">Forget your password? <a href="{% url 'user:reset_password' %}" >reset.</a></div>
+                </form>
+            </div>
+            <div class="col-md-8">
+                
+            </div>
+        </div>
+        {% include 'layouts/_footer.html' %} 
+    </div>
+
+</body>
+
+{% endblock %}

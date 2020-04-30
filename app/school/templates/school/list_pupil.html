@@ -1,0 +1,47 @@
+{% extends 'school/temp_index.html' %}
+
+	{% block title %}
+		Pupils' list | {{ site_name }}
+	{% endblock %}
+     {% block display_table %}
+     {% load crispy_forms_tags %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <strong>Total number of pupils {{ pupils|length }}</strong>
+          </div>
+          <div class="panel-body">          
+              <div id="messages"></div>
+
+                <div class="pull pull-right">
+                      <a href="{% url 'school:add_new_pupil' %}" >
+                        <button type="button" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add pupil
+                        </button>
+                     </a>
+
+                </div>
+
+                <br /> <br /> <br>
+                
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="list_responsible">
+                   <thead>
+                       <tr><th></th><th>#</th><th>First Name</th><th>Last Name</th><th>Sex</th><th>Address</th><th>Enrolment date</th></tr>
+                    </thead>
+                    <tbody>
+                      {% if pupils %}
+                        {% for pupil in pupils %}
+                        <tr><td><a href="{% url 'school:update_pupil' pk=pupil.pk %}">edit</a> </td><td><a href="{% url 'school:show_detail_pupil' pk=pupil.pk %}">{{ pupil.id }} </a></td><td>{{ pupil.first_name }}</td><td>{{ pupil.last_name }}</td><td>{{ pupil.sex }}</td><td>{{ pupil.address }}</td><td>{{ pupil.enrolment_date }}</td></tr>
+                        {% endfor %}
+                      {% endif %}
+                   </tbody>
+            </table>
+            </div>
+            
+          </div>
+        </div>
+		
+    {% endblock %}
+
+
+

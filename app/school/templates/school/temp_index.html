@@ -1,0 +1,23 @@
+{% extends 'school/_temp_base.html ' %}
+{% block maincontent %}
+
+    <div class="wrapper">
+        <!-- Sidebar Holder -->
+        {% include 'school/_side_nav.html' %}
+        
+
+        <!-- Page Content Holder -->
+        <div id="content">
+            {% include "school/_top_nav.html "%}
+            {% block school_content %}
+            <div class="school-content-wrapper">
+
+            {% block display_table %}
+            {% endblock %}
+
+            </div>
+
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

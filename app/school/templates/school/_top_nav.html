@@ -1,0 +1,40 @@
+            <nav class="navbar navbar-expand-lg nav-bar">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            {% if user.is_authenticated %}
+                            <form class="form-inline my-2 my-lg-0">
+                              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                              
+                              <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% if user.image.url %}<img src="{{ user.image.url }}" alt="Profile image of {{ user.username }}" class="avatar-xs"> {% endif %} {{ user.first_name }} {{ user.last_name }} 
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                      {% if request.user.is_staff or request.user.is_superuser %}
+                                      <a class="dropdown-item" href="/admin">Admin</a>
+                                      {% endif %}
+                                    <a class="dropdown-item" href="{% url 'user:profile' %}">Profile</a>
+                                      <a class="dropdown-item" href="{% url 'user:logout' %}">Log out</a>
+                                    <a class="dropdown-item" href="">Change Password</a> 
+                                </div>
+                              </li>
+                             {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            
