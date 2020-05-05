@@ -12,26 +12,14 @@
 <br/>
     <div class='row'>
         <div class='col-sm-3 col-xs-12' style='background-color:yellow;'>
-            <h1>{{ object.user }} </h1>
+            <h1>{{ request.user }} </h1>
         </div>
         <div class='col-sm-9 col-xs-12'>
-            {{ object.content|safe }}
-            {{ object.created_at|timesince }} {% if object.comments.count > 0 %} | {{ object.comments.count }} Comments {% endif %}
-            <br/><br/>
             <div class="container comments">
-                <div class="">
-                    <form class="comment-form" method="POST" action=".">
-                        {% csrf_token %}
-                        {{comment_form|crispy}}
-                        <input name="submit" type="submit" value="Submit">
-                    </form>
-                </div>
-                
-                {% for comment in object.comments %}
                 <blockquote  class="blockquote">
                     <p class="mb-0">{{ comment.content }}</p>
-                    <p class="blockquote-footer">{{ comment.created_at|timesince }} {% if comment.children.count > 0 %} | <a href="{{ comment.get_absolute_url }}"> {{ comment.children.count }} Replies </a> {% endif %} | <a class="comment-reply-btn" href="#">Reply</a></p>
-                    <div class="comment-reply">
+                    <p class="blockquote-footer">{{ comment.created_at|timesince }} {% if comment.children.count > 0 %} | <a href="{{ comment.get_absolute_url }}" > {{ comment.children.count }} Replies </a> {% endif %}</p>
+                    <div class="comment-children">
                         {% for child_comment in comment.children %}
                         <blockquote  class="blockquote">
                             <p class="mb-0"> {{ child_comment.content }}</p>
@@ -48,12 +36,9 @@
                         </form>
                     </div>
                 </blockquote>
-                {% endfor %}
 
             </div>
         </div>
-
-
     </div>
     {% include 'layouts/_footer.html' %} 
     

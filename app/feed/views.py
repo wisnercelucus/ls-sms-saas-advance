@@ -103,6 +103,7 @@ class PostDetailView(LoginRequiredMixin, DetailView):
 				content_type = ContentType.objects.get(model=c_type)
 				obj_id = form.cleaned_data.get('object_id')
 				content = form.cleaned_data.get('content')
+				parent_obj = None
 				try:
 					parent_id = int(request.POST.get("parent_id"))
 				except:

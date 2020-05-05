@@ -59,7 +59,7 @@ TENANT_APPS = [
     'task.apps.TaskConfig',
     'rest_framework',
     'ckeditor',
-    'comments',
+    'comments.apps.CommentsConfig',
 ]
 
 INSTALLED_APPS = list(set(SHARED_APPS + TENANT_APPS))
