@@ -100,8 +100,6 @@
         return formated_url
       }
 
-
-
       $(document.body).on("click", ".btn-like", function(e){
             e.preventDefault()
             var this_ = $(this)
@@ -113,13 +111,37 @@
                   success: function(data){
 
                     if(data.liked){
-                       this_.text("Unlike")
-                       $('#likes-shared').text("Likes "+ "("+ data.likes+")") 
-                       $('#likes-origin').text("Likes "+ "("+ data.likes+")") 
+                       this_.html("<i class=\"fa fa-thumbs-up\"></i> "+ "("+ data.likes+")")
                    }else{
-                        this_.text("Like")
-                        $('#likes-shared').text("Likes "+ "("+ data.likes+")") 
-                        $('#likes-origin').text("Likes "+ "("+ data.likes+")") 
+                        this_.html("<i class=\"fa fa-thumbs-up\"></i> "+ "("+ data.likes+")") 
+                   }
+
+                  },
+
+                  error: function(data){
+                    console.log("An error occured")
+                    console.log("data")
+                  }
+             })
+            
+      })
+
+
+      $(document.body).on("click", ".btn-like-on-share", function(e){
+            e.preventDefault()
+            var this_ = $(this)
+            var postLikeUrl = formatApiDetailUrl(this_.attr("href"))
+
+            $.ajax({
+                  method: 'GET',
+                  url: postLikeUrl,
+                  success: function(data){
+
+                    if(data.liked){
+                       this_.html("<i class=\"fa fa-thumbs-up\"></i> " + "("+ data.likes+")")
+
+                   }else{
+                        this_.html("<i class=\"fa fa-thumbs-up\" style='color:grey'></i> " + "("+ data.likes+")")
                    }
 
                   },
@@ -164,10 +186,10 @@
           var postUrl = postValue.url;
           var postUser = postValue.user;
           var postFormattedHtml;
-          var verb='Like'
+          var verb='<i class="fa fa-thumbs-up" style="color:grey"></i> '
 
           if(postValue.did_like){
-            verb = 'Unlike'
+            verb = '<i class="fa fa-thumbs-up"></i> '
           }
 
           var imageContent;
@@ -185,11 +207,11 @@
               imageContent = ''
             }
 
-            postFormattedHtml = "<div class=\"card post-container\"><div class=\"card-header\">" + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">"+ postUser.first_name + " " + postUser.last_name + "</a> | " + timeSince + "<small> Shared from</small></div><div class='card wrap-parent'><div class=\"card-header\"> " + "<a href='" + parentPost.user.url +   "'>"+ "<img src=\"" + parentPost.user.image + " \" alt=\"Profile image of" + parentPost.user.first_name + " "+ parentPost.user.last_name + "\" class=\"avatar-xs\">" + parentPost.user.first_name + " " + parentPost.user.last_name + "</a>"+ " | " + parentPost.timesince + " </div><div class=\"card-body card-body-content\">" + parentPost.content + "</div>" + imageContent + "</div><div class='wrap-post-performance'><span class='likes' id='likes-shared'>" + "Likes (" + postValue.likes +")"+ "</span><span class='comments' id=\"comments-shared\">"+ 'Comments (0)' +"</span></div><div class='card-footer'>"+ "<a href='"+  parentPost.url +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'>Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb +"</a>"+"</div></div>"
+            postFormattedHtml = "<div class=\"card post-container\"><div class=\"card-header\">" + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">"+ postUser.first_name + " " + postUser.last_name + "</a> | " + timeSince + "<small> Shared from</small></div><div class='card wrap-parent'><div class=\"card-header\"> " + "<a href='" + parentPost.user.url +   "'>"+ "<img src=\"" + parentPost.user.image + " \" alt=\"Profile image of" + parentPost.user.first_name + " "+ parentPost.user.last_name + "\" class=\"avatar-xs\">" + parentPost.user.first_name + " " + parentPost.user.last_name + "</a>"+ " | " + parentPost.timesince + " </div><div class=\"card-body card-body-content\">" + parentPost.content + "</div>" + imageContent + "</div><div class='card-footer'>"+ "<a href='"+  parentPost.url +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like-on-share\" href='"+  postUrl +"like/" + "'> "+ verb + "("+ postValue.likes +")" +"</a>"+"</div><div class='comments'>Comments</div></div>"
 
           }else{
 
-            postFormattedHtml = "<div class=\"card post-container\" style=\"width: 33rem;\"><div class=\"card-header\"> " + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">" + postUser.first_name + " " + postUser.last_name + "</a>" + " | " + timeSince + "</div> <div class=\"card-body card-body-content\" >"+ postContent +"</div>"+ imageContent +  "<div class='wrap-post-performance'><span class='likes' id='likes-origin'>" + "Likes (" + postValue.likes +")" + "</span><span class=\"comments\" id='comments-origin'>"+ 'comments (0)' +"</span></div><div class='card-footer'>"+ "<a href='"+  postUrl +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'>Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb +"</a>" +"</div>" + " </div>"
+            postFormattedHtml = "<div class=\"card post-container\" style=\"width: 33rem;\"><div class=\"card-header\"> " + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">" + postUser.first_name + " " + postUser.last_name + "</a>" + " | " + timeSince + "</div> <div class=\"card-body card-body-content\" >"+ postContent +"</div>"+ imageContent +  "<div class='card-footer'>"+ "<a href='"+  postUrl +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb + "("+ postValue.likes +")" + "</a>" +"</div>" + "<div class='comments'>Comments</div> </div>"
           }
 
 

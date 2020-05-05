@@ -28,7 +28,6 @@ from school.forms import (
 @login_required
 def index(request):
 	tenant = request.tenant
-	print(dir(request.user))
 	context = {'school':tenant}
 	return render(request, 'school/index.html', context)
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404 
+from django.shortcuts import render, redirect, get_object_or_404 
 from django.views.generic import (
 	CreateView,
 	DeleteView,
@@ -15,6 +15,10 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from django.views import View
 from django.http import HttpResponseRedirect
+
+from django.contrib.contenttypes.models import ContentType
+from comments.models import Comment
+from comments.forms import CommentForm
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -74,6 +78,50 @@ class PostDetailView(LoginRequiredMixin, DetailView):
 	template_name = 'feed/post_detail.html'
 
 	queryset = Post.objects.all()
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(PostDetailView, self).get_context_data(*args, **kwargs)
+		instance = kwargs['object']
+
+		intial_data = {
+				'content_type': instance.get_content_type,
+				'object_id': instance.id
+		}
+
+		comment_form = CommentForm(initial=intial_data)
+		context['comment_form'] = comment_form
+		return context
+
+	def post(self, request, *args, **kwargs):
+		instance = self.queryset.filter(pk=kwargs['pk']).first()
+
+		if request.user.is_authenticated:
+			form = CommentForm(request.POST or None)
+			if form.is_valid():
+				c_type = form.cleaned_data.get('content_type')
+				c_type = c_type.split('|')[1].strip()
+				content_type = ContentType.objects.get(model=c_type)
+				obj_id = form.cleaned_data.get('object_id')
+				content = form.cleaned_data.get('content')
+				try:
+					parent_id = int(request.POST.get("parent_id"))
+				except:
+					parent_id = None
+				if parent_id:
+					parent_qs = Comment.objects.filter(pk=parent_id)
+					if parent_qs.exists():
+						parent_obj = parent_qs.first()
+				new_comment , created = Comment.objects.get_or_create(
+					user=request.user,
+					content_type=content_type,
+					object_id=obj_id,
+					content=content,
+					parent=parent_obj
+					)
+				return redirect("feed:detail_post", pk=kwargs['pk'])
+			else:
+				print(form.errors)
+		return HttpResponseRedirect("/feed")
 
 
 class PostShareView(LoginRequiredMixin, View):

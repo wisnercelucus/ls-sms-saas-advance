@@ -9,6 +9,8 @@ from django.db.models.signals import post_save
 import re
 from feed.signals import parsed_hashtags
 from ckeditor.fields import RichTextField
+from django.contrib.contenttypes.models import ContentType
+from comments.models import Comment
 
 def user_feed_image_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -72,11 +74,23 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("feed:detail_post", kwargs={"pk":self.pk})
+
+    @property
+    def comments(self):
+        instance = self
+        return Comment.objects.filter_by_instance(instance)
     
+    @property
+    def get_content_type(self):
+        instance = self
+        return ContentType.objects.get_for_model(instance.__class__)
+
     objects = PostManager()
 
     class Meta:
         ordering =["-created_at"]
+        verbose_name = "post"
+
 
 class HashTag(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
@@ -93,6 +107,7 @@ class HashTag(models.Model):
 		return Post.objects.filter(
 			Q(content__icontains='#' + self.tag)
 			)
+        
 
 def post_save_receiver(sender, instance, created, *args, **kwargs):
     if created and not instance.parent:
