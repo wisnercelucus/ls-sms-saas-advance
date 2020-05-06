@@ -19,10 +19,11 @@ class Commentmanager(models.Manager):
 
     def create_by_model_type(self, model_type, pk, content, user, parent_obj=None):
         model_qs = ContentType.objects.filter(model=model_type)
-        if not model_qs.exists():
+
+        if model_qs.exists():
             SomeModel = model_qs.first().model_class()
+            print(SomeModel)
             obj_qs = SomeModel.objects.filter(pk=pk)
-            print(obj_qs)
             if obj_qs.exists():
                 instance = self.model()
                 instance.content = content

@@ -8,7 +8,7 @@ from rest_framework import generics
 from django.db.models import Q
 from rest_framework import permissions
 from .pagination import StandardCommentResultPagination
-
+from .permissions import IsOwnerOrReadOnly
 #from rest_framework.views import APIView
 #from rest_framework.response import Response
 
@@ -35,6 +35,7 @@ class CommentCreateApiView(generics.CreateAPIView):
 		model_type = self.request.GET.get('type')
 		pk =  self.request.GET.get('pk')
 		parent_id = self.request.GET.get('parent_id', None)
+
 		return comment_create_serializer(
 			model_type=model_type, pk=pk, parent_id=parent_id, 
 			user=self.request.user)

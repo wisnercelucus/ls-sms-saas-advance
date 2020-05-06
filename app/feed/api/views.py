@@ -7,6 +7,7 @@ from rest_framework import permissions
 from .pagination import StandardPostResultPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .permissions import IsOwnerOrReadOnly
 
 
 class LikeToggleAPIView(APIView):
@@ -37,6 +38,34 @@ class PostCreateApiView(generics.CreateAPIView):
 	permission_classes = [permissions.IsAuthenticated]
 	def perform_create(self, serializer):
 		serializer.save(user=self.request.user)
+
+
+class PostUpdateApiView(generics.UpdateAPIView):
+	queryset = Post.objects.all()
+	serializer_class = PostModelSerializer
+	permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+
+
+class PostDetailApiView(generics.RetrieveAPIView):
+	queryset = Post.objects.all()
+	serializer_class = PostModelSerializer
+	permission_classes = [permissions.IsAuthenticated]
+
+
+class PostDeleteApiView(generics.DestroyAPIView):
+	serializer_class = PostModelSerializer
+	permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+
+	def get_queryset(self):
+		queryset = Post.objects.filter(pk=self.kwargs['pk'])
+		return queryset
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		if not instance:
+			return Response("Cannot delete null object", status=status.HTTP_400_BAD_REQUEST)
+		self.perform_destroy(instance)
 
 
 class PostListApiView(generics.ListAPIView):

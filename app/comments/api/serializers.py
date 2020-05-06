@@ -56,7 +56,8 @@ def comment_create_serializer(model_type='post', pk=None, parent_id=None, user=N
 
 			comment = Comment.objects.create_by_model_type(
 				model_type, pk, content, main_user, parent_obj=parent_obj)
-			
+			comment
+						
 			return comment
 
 	return CommentCreateSerializer
@@ -125,6 +126,7 @@ class CommentChildSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Comment
 		fields = [
+			'id',
 			'user',
 			'content',
 			'created_at',
@@ -140,6 +142,7 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Comment
 		fields = [
+			'id',
 			'user',
 			'content',
 			'created_at',
