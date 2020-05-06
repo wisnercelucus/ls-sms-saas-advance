@@ -17,6 +17,25 @@ class Commentmanager(models.Manager):
                 object_id=obj_id).filter(parent=None)
         return qs
 
+    def create_by_model_type(self, model_type, pk, content, user, parent_obj=None):
+        model_qs = ContentType.objects.filter(model=model_type)
+        if not model_qs.exists():
+            SomeModel = model_qs.first().model_class()
+            obj_qs = SomeModel.objects.filter(pk=pk)
+            print(obj_qs)
+            if obj_qs.exists():
+                instance = self.model()
+                instance.content = content
+                instance.user = user
+                instance.content_type = model_qs.first()
+                instance.object_id = obj_qs.first().id
+                if parent_obj:
+                    instance.parent = parent_obj
+                instance.save()
+                return instance
+            return "Could note create it"
+        return None
+
 
 class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)

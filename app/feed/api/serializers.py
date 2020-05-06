@@ -4,8 +4,10 @@ from django.utils.timesince import timesince
 from django.urls import reverse_lazy
 
 from feed.models import Post
-
-
+from comments.models import Comment
+from comments.api.serializers import (CommentModelSerializer, 
+	CommentDetailSerializer,
+	)
 
 
 class ParentPostModelSerializer(serializers.ModelSerializer):
@@ -46,6 +48,8 @@ class PostModelSerializer(serializers.ModelSerializer):
 	likes = serializers.SerializerMethodField()
 	did_like = serializers.SerializerMethodField()
 	redirect_ = serializers.SerializerMethodField()
+	comments = serializers.SerializerMethodField()
+
 
 	
 	class Meta:
@@ -62,6 +66,7 @@ class PostModelSerializer(serializers.ModelSerializer):
 			'did_like',
 			'image',
 			'redirect_',
+			'comments',
 		]
 
 	def get_redirect_(self, obj):
@@ -86,3 +91,14 @@ class PostModelSerializer(serializers.ModelSerializer):
 
 	def get_url(self, obj):
 		return reverse_lazy("feed:detail_post", kwargs={"pk": obj.pk})
+
+	def get_comments(self, obj):
+		content_type = obj.get_content_type
+		object_id = obj.id
+		c_qs = Comment.objects.filter_by_instance(obj)
+
+		comments = CommentModelSerializer(c_qs, many=True).data
+		return comments
+
+
+
