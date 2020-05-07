@@ -33,9 +33,11 @@ class CommentCreateApiView(generics.CreateAPIView):
 	queryset = Comment.objects.all()
 
 	def get_serializer_class(self):
-		model_type = self.request.GET.get('type')
-		pk =  self.request.GET.get('pk')
-		parent_id = self.request.GET.get('parent_id', None)
+		model_type = self.request.POST.get('content_type')
+		pk =  self.request.POST.get('object_id')
+		parent_id = self.request.POST.get('parent_id', None)
+
+		print('within serializer')
 
 		return comment_create_serializer(
 			model_type=model_type, pk=pk, parent_id=parent_id, 
@@ -43,17 +45,27 @@ class CommentCreateApiView(generics.CreateAPIView):
 	
 	#def perform_create(self, serializer):
 
-class CommentDetailApiView(UpdateModelMixin, DestroyModelMixin, generics.RetrieveAPIView):
+class CommentDetailApiView(generics.RetrieveAPIView):
+
+	serializer_class = CommentDetailSerializer
+	permission_classes = [permissions.IsAuthenticated]
+	queryset = Comment.objects.filter(id__gte=0)
+	
+
+class CommentManagementApiView(UpdateModelMixin, DestroyModelMixin, generics.RetrieveAPIView):
 
 	serializer_class = CommentDetailSerializer
 	permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 	queryset = Comment.objects.filter(id__gte=0)
+	
+
 
 	def put(self, request, *args, **kwargs):
 		return self.update(request, *args, **kwargs)
 
 	def delete(self, request, *args, **kwargs):
 		return self.destroy(request, *args, **kwargs)
+
 
 
 class CommentListApiView(generics.ListAPIView):

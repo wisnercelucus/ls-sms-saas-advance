@@ -2,10 +2,9 @@ from rest_framework import serializers
 from user.api.serializers import UserModelSerializer
 from django.utils.timesince import timesince
 from django.urls import reverse_lazy
-
 from feed.models import Post
 from comments.models import Comment
-from comments.api.serializers import (CommentModelSerializer, 
+from comments.api.serializers import (CommentModelSerializer, CommentChildSerializer, 
 	CommentDetailSerializer,
 	)
 
@@ -19,6 +18,7 @@ class ParentPostModelSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Post
 		fields = [
+			'id',
 			'user',
 			'content',
 			'created_at',
@@ -50,11 +50,11 @@ class PostModelSerializer(serializers.ModelSerializer):
 	redirect_ = serializers.SerializerMethodField()
 	comments = serializers.SerializerMethodField()
 
-
 	
 	class Meta:
 		model = Post
 		fields = [
+			'id',
 			'user',
 			'content',
 			'created_at',
@@ -96,7 +96,6 @@ class PostModelSerializer(serializers.ModelSerializer):
 		content_type = obj.get_content_type
 		object_id = obj.id
 		c_qs = Comment.objects.filter_by_instance(obj)
-
 		comments = CommentModelSerializer(c_qs, many=True).data
 		return comments
 
