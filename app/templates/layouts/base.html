@@ -198,7 +198,9 @@
           }else{
             imageContent = ''
           }
-          
+
+          var comments_form = "<div class='container comment-form'><form id='comment-form' method='POST' action='comments/api/create/'>"+ {% csrf_token %} +"<div class='form-group'><input class='form-control' type='text' placeholder='Comment...' name='content' required id='comment-content'><input type='hidden' name='content_type' value='post'><input type='hidden' name='object_id' value='"+ postValue.id +"'></div></form></div>"
+
           if(share && postValue.parent){
             var parentPost = postValue.parent;
             if(postValue.parent.image){
@@ -207,11 +209,11 @@
               imageContent = ''
             }
 
-            postFormattedHtml = "<div class=\"card post-container\"><div class=\"card-header\">" + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">"+ postUser.first_name + " " + postUser.last_name + "</a> | " + timeSince + "<small> Shared from</small></div><div class='card wrap-parent'><div class=\"card-header\"> " + "<a href='" + parentPost.user.url +   "'>"+ "<img src=\"" + parentPost.user.image + " \" alt=\"Profile image of" + parentPost.user.first_name + " "+ parentPost.user.last_name + "\" class=\"avatar-xs\">" + parentPost.user.first_name + " " + parentPost.user.last_name + "</a>"+ " | " + parentPost.timesince + " </div><div class=\"card-body card-body-content\">" + parentPost.content + "</div>" + imageContent + "</div><div class='card-footer'>"+ "<a href='"+  parentPost.url +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like-on-share\" href='"+  postUrl +"like/" + "'> "+ verb + "("+ postValue.likes +")" +"</a>"+"</div><div class='comments'>Comments</div></div>"
+            postFormattedHtml = "<div class=\"card post-container\"><div class=\"card-header\">" + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">"+ postUser.first_name + " " + postUser.last_name + "</a> | " + timeSince + "<small> Shared from</small></div><div class='card wrap-parent'><div class=\"card-header\"> " + "<a href='" + parentPost.user.url +   "'>"+ "<img src=\"" + parentPost.user.image + " \" alt=\"Profile image of" + parentPost.user.first_name + " "+ parentPost.user.last_name + "\" class=\"avatar-xs\">" + parentPost.user.first_name + " " + parentPost.user.last_name + "</a>"+ " | " + parentPost.timesince + " </div><div class=\"card-body card-body-content\">" + parentPost.content + "</div>" + imageContent + "</div><div class='card-footer'>"+ "<a href='"+  parentPost.url +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like-on-share\" href='"+  postUrl +"like/" + "'> "+ verb + "("+ postValue.likes +")" +"</a>"+"</div><div class='comments'>Comments</div> "+ comments_form + " </div>"
 
           }else{
 
-            postFormattedHtml = "<div class=\"card post-container\" style=\"width: 33rem;\"><div class=\"card-header\"> " + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">" + postUser.first_name + " " + postUser.last_name + "</a>" + " | " + timeSince + "</div> <div class=\"card-body card-body-content\" >"+ postContent +"</div>"+ imageContent +  "<div class='card-footer'>"+ "<a href='"+  postUrl +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb + "("+ postValue.likes +")" + "</a>" +"</div>" + "<div class='comments'>Comments</div> </div>"
+            postFormattedHtml = "<div class=\"card post-container\" style=\"width: 33rem;\"><div class=\"card-header\"> " + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">" + postUser.first_name + " " + postUser.last_name + "</a>" + " | " + timeSince + "</div> <div class=\"card-body card-body-content\" >"+ postContent +"</div>"+ imageContent +  "<div class='card-footer'>"+ "<a href='"+  postUrl +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb + "("+ postValue.likes +")" + "</a>" +"</div>" + "<div class='comments'>Comments</div>"+ comments_form +" </div>"
           }
 
 
