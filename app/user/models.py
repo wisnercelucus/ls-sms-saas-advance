@@ -5,6 +5,7 @@ from django.db import models
 #from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as AbstractUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.conf import settings
 from django.db.models.signals import post_delete, post_save
 

@@ -1,7 +1,7 @@
 import uuid
 import os
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.conf import settings
 from django.db.models import Q
 from django.utils import timezone
@@ -74,6 +74,11 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("feed:detail_post", kwargs={"pk":self.pk})
+
+    def get_api_url(self):
+        url = reverse("feed:feed-api:detail_post", kwargs={"pk":self.pk})
+        print('get-call' + url)
+        return url
 
     @property
     def comments(self):

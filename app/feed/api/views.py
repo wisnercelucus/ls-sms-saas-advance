@@ -8,6 +8,7 @@ from .pagination import StandardPostResultPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.mixins import UpdateModelMixin
 
 
 class LikeToggleAPIView(APIView):
@@ -33,6 +34,7 @@ class PostShareApiView(APIView):
 				return Response(data)
 		return Response(None, status=400)
 
+
 class PostCreateApiView(generics.CreateAPIView):
 	serializer_class = PostModelSerializer
 	permission_classes = [permissions.IsAuthenticated]
@@ -40,12 +42,13 @@ class PostCreateApiView(generics.CreateAPIView):
 		serializer.save(user=self.request.user)
 
 
-class PostUpdateApiView(generics.UpdateAPIView):
+class PostUpdateApiView(UpdateModelMixin, generics.RetrieveAPIView):
 	queryset = Post.objects.all()
 	serializer_class = PostModelSerializer
 	permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-
+	def put(self, request, *args, **kwargs):
+		return self.update(request, *args, **kwargs)
 
 class PostDetailApiView(generics.RetrieveAPIView):
 	queryset = Post.objects.all()

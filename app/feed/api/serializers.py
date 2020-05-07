@@ -100,5 +100,12 @@ class PostModelSerializer(serializers.ModelSerializer):
 		comments = CommentModelSerializer(c_qs, many=True).data
 		return comments
 
+	def update(self, instance, validated_data):
+		"""Update a user, setting the password correctly and return it"""
+		
+		post = super().update(instance, validated_data)
+
+		return post
+
 
 

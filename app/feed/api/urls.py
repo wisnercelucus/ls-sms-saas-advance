@@ -1,6 +1,7 @@
 from django.urls import path
 from feed.api import views
 
+app_name ='feed-api'
 
 urlpatterns = [
     path('posts/', views.PostListApiView.as_view(), name='list'),

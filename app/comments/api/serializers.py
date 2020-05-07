@@ -138,6 +138,8 @@ class CommentChildSerializer(serializers.ModelSerializer):
 class CommentDetailSerializer(serializers.ModelSerializer):
 	user = UserModelSerializer(read_only=True)
 	replies = serializers.SerializerMethodField()
+	url = serializers.SerializerMethodField()
+	content_object_url = serializers.SerializerMethodField()
 	
 	class Meta:
 		model = Comment
@@ -146,12 +148,26 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 			'user',
 			'content',
 			'created_at',
+			'url',
 			'content_type',
 			'object_id',
+			'content_object_url',
 			'replies',
+			
 		]
 
+		read_only_fields =['content_type', 'object_id', 'replies']
+
+	def get_content_object_url(self, obj):
+		try:
+			return obj.content_object.get_api_url()
+		except:
+			return None
+		
 	def get_replies(self, obj):
 		if obj.is_parent:
 			return CommentChildSerializer(obj.children(), many=True).data
 		return None
+
+	def get_url(self, obj):
+		return reverse_lazy("feed:comments:comment_thread", kwargs={"pk": obj.pk})

@@ -9,6 +9,7 @@ from django.db.models import Q
 from rest_framework import permissions
 from .pagination import StandardCommentResultPagination
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 #from rest_framework.views import APIView
 #from rest_framework.response import Response
 
@@ -41,19 +42,24 @@ class CommentCreateApiView(generics.CreateAPIView):
 			user=self.request.user)
 	
 	#def perform_create(self, serializer):
-	#	serializer.save(user=self.request.user)
 
-class CommentDetailApiView(generics.RetrieveAPIView):
+class CommentDetailApiView(UpdateModelMixin, DestroyModelMixin, generics.RetrieveAPIView):
 
 	serializer_class = CommentDetailSerializer
-	permission_classes = [permissions.IsAuthenticated]
-	queryset = Comment.objects.all()
+	permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+	queryset = Comment.objects.filter(id__gte=0)
+
+	def put(self, request, *args, **kwargs):
+		return self.update(request, *args, **kwargs)
+
+	def delete(self, request, *args, **kwargs):
+		return self.destroy(request, *args, **kwargs)
 
 
 class CommentListApiView(generics.ListAPIView):
 	permission_classes = [permissions.IsAuthenticated]
 	serializer_class = CommentModelSerializer
-	#pagination_class = StandardCommentResultPagination
+	pagination_class = StandardCommentResultPagination
 
 	def get_serializer_context(self, *args, **kwargs):
 		context = super(CommentListApiView, self).get_serializer_context(*args, **kwargs)

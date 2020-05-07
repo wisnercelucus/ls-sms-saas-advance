@@ -58,6 +58,7 @@ TENANT_APPS = [
     'feed.apps.FeedConfig',
     'task.apps.TaskConfig',
     'rest_framework',
+    'rest_framework.authtoken',
     'ckeditor',
     'comments.apps.CommentsConfig',
 ]
