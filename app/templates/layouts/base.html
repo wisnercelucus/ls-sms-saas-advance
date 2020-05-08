@@ -127,6 +127,38 @@
       })
 
 
+      $(document.body).on("click", ".btn-comment-like", function(e){
+            e.preventDefault()
+            var this_ = $(this)
+            var commentLikeUrl = this_.attr("href")
+
+            $.ajax({
+                  method: 'GET',
+                  url: commentLikeUrl,
+                  success: function(data){
+
+                    if(data.liked){
+                       this_.html("<i class=\"fa fa-thumbs-up\"></i> "+ "("+ data.likes+")")
+                   }else{
+                        this_.html("<i class=\"fa fa-thumbs-up\" style='color:grey'></i> "+ "("+ data.likes+")") 
+                   }
+
+                  },
+
+                  error: function(data){
+                    console.log("An error occured")
+                    console.log("data")
+                  }
+             })
+            
+      })
+
+
+
+
+
+
+
       $(document.body).on("click", ".btn-like-on-share", function(e){
             e.preventDefault()
             var this_ = $(this)
@@ -200,33 +232,72 @@
           }
           var comments_label = ""
           if(postValue.comments){
-            comments_label =  "<div class='container comments'>Comments (" + postValue.comments.length + ")</div>"
 
+            comments_label =  "<div class='container comments'>Comments (" + postValue.total_comments + ")</div>"
           }
+
           var comments_thread = "" ;
 
           if(postValue.comments){
+            var i = 0;
+            var verb1='<i class="fa fa-thumbs-up" style="color:grey"></i> '
             $.each(postValue.comments, function(key, value){
 
+              if(i==1){
+                return;
+              }
+
+              var replies_thread="";
+
               if(value.content){
-                    console.log(fetchCommentChildren(value.id))
+                  
+
+                  if(value.did_like){
+                      verb1 = '<i class="fa fa-thumbs-up"></i> '
+                      console.log('Value Did like')
+                  }
+
+                        var comments_reply_form = "<div class='container comment-reply-forms'>"+
+                        "<form class='comment-form' method='POST'>"+
+                        "<div class='form-group'><div class='row'><div class='col-md-1 col-sm-1'><img class='avatar-xs' src='{{request.user.image.url}}'></div><div class='col-md-8 col-sm-8'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'><input class='form-control comment-content' type='text' placeholder='Comment...' name='content' required ><input type='hidden' name='content_type' value='post'><input type='hidden' name='object_id' value='"+ postValue.id +"'><input type=\"hidden\" name=\"parent_id\" value=\""+ value.id +"\"></div><div class='col-md-3 col-sm-3'><input class='btn btn-primary submit-comment' type='submit' name='submit' value='Reply'></div></div></div>"+
+                        "</form></div>"
+
+                    if(value.replies){
+                      replies_thread="";
+                      var j = 0;
+                      $.each(value.replies, function(key, val){
+                      if(j==1){
+                        return;
+                      }
+                        if(val.did_like){
+                              verb1 = '<i class="fa fa-thumbs-up></i> '
+                              console.log('Did like')
+                        }
+                       replies_thread += "<div class=\"media comment-media container\">"+
+                            "<img src=\""+ val.user.image +"\" class=\"avatar-xs mr-3\" alt=\"...\"></a><div class=\"media-body\"><strong class=\"mt-0\">"+  value.user.first_name + ' ' + 
+                        value.user.last_name  +"</strong><br><div class='comment-body'>"+  val.content +  "</div><div class='comment-group-action'><a class='btn-comment-like' href='/feed/comments/api/"+  val.id+"/like/'>"+ verb1 + "("+ val.likes +")" +"</a><a href='' class='comment-reply-api'>Reply</a></div></div></div>"  + comments_reply_form
+                        j++;
+                      })
+
+                    }
+
                     comments_thread += "<div class=\"media comment-media container\"><img src=\""+ 
                     value.user.image + "\" class=\"avatar-xs\" alt=\"...\">"+
                     "<div class=\"media-body\"><strong class=\"mt-0\">" + value.user.first_name + ' ' + 
                     value.user.last_name + "</strong><div class='comment-body'>"+
-                    value.content + " replies"+  "</div></div></div>"
+                    value.content + "</div><div class='comment-group-action'><a href='"+ value.url +"like/' class='btn-comment-like'>"+  verb1 + "("+ value.likes +")" +"</a><a href='' class='comment-reply-api'>Reply</a></div>" + replies_thread  + "</div></div>" + comments_reply_form
               }
+              i++;
               
             })
 
           }
 
-          var act_url = 'comments/"+ postValue.id +"/comment'
-
-          var comments_form = "<div class='container'>"+
+        var comments_form = "<div class='container'>"+
           "<form class='comment-form' method='POST'>"+
           "<div class='form-group'><div class='row'><div class='col-md-1 col-sm-1'><img class='avatar-xs' src='{{request.user.image.url}}'></div><div class='col-md-8 col-sm-8'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'><input class='form-control comment-content' type='text' placeholder='Comment...' name='content' required ><input type='hidden' name='content_type' value='post'><input type='hidden' name='object_id' value='"+ postValue.id +"'></div><div class='col-md-3 col-sm-3'><input class='btn btn-primary submit-comment' type='submit' name='submit' value='Comment'></div></div></div>"+
           "</form></div>"
+
 
           if(share && postValue.parent){
             var parentPost = postValue.parent;
@@ -240,7 +311,7 @@
 
           }else{
 
-            postFormattedHtml = "<div class=\"card post-container\" style=\"width: 33rem;\"><div class=\"card-header\"> " + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">" + postUser.first_name + " " + postUser.last_name + "</a>" + " | " + timeSince + "</div> <div class=\"card-body card-body-content\" >"+ postContent +"</div>"+ imageContent +  "<div class='card-footer'>"+ "<a href='"+  postUrl +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb + "("+ postValue.likes +")" + "</a>" +"</div>" + comments_label + comments_thread+ comments_form +" </div>"
+            postFormattedHtml = "<div class=\"card post-container\" style=\"width: 33rem;\"><div class=\"card-header\"> " + "<a href='" + postUser.url +   "'>" + "<img src=\"" + postUser.image + " \" alt=\"Profile image of" + postUser.first_name + " "+ postUser.last_name + "\" class=\"avatar-xs\">" + postUser.first_name + " " + postUser.last_name + "</a>" + " | " + timeSince + "</div> <div class=\"card-body card-body-content\" >"+ postContent +"</div>"+ imageContent +  "<div class='card-footer'>"+ "<a href='"+  postUrl +"'>View</a>" + " | " + "<a class=\"btn-share\" href='"+  postUrl +"share/" + "'><i class=\"fa fa-share\"></i> Share</a>" + " | " + "<a class=\"btn-like\" href='"+  postUrl +"like/" + "'>"+ verb + "("+ postValue.likes +")" + "</a>" +"</div>" + comments_label + comments_thread+ "<div class='container load-more'><a href='"+ postValue.url +"'>View all comments</a></div>"+ comments_form +" </div>"
           }
 
 
@@ -351,6 +422,14 @@
             }
           })
       })
+
+    $(document.body).on("click", ".comment-reply-api", function(e){
+            event.preventDefault()
+            //console.log($(this).parent().parent().parent().next(".comment-reply-forms"))
+            $(this).parent().parent().parent().next(".comment-reply-forms").fadeToggle();
+    })
+
+
         
     /*
     var authorisedNumberOfChars = 250;

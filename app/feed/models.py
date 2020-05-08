@@ -84,7 +84,12 @@ class Post(models.Model):
     def comments(self):
         instance = self
         return Comment.objects.filter_by_instance(instance)
-    
+
+    @property
+    def total_comments(self):
+        instance = self
+        return len(Comment.objects.filter(object_id=instance.id))
+
     @property
     def get_content_type(self):
         instance = self

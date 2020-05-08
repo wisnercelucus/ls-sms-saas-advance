@@ -410,3 +410,12 @@ blockquote{
   margin-top: 10px;
 
 }
+
+.comment-reply-forms{
+  display: none;
+}
+
+
+.comment-group-action a{
+  margin-left: 30px !important;
+}

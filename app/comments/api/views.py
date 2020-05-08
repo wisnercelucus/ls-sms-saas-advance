@@ -10,22 +10,19 @@ from rest_framework import permissions
 from .pagination import StandardCommentResultPagination
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
-#from rest_framework.views import APIView
-#from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 
-#class LikeToggleAPIView(APIView):
-#    permission_classes = [permissions.IsAuthenticated]
-#    def get(self, request, pk, format=None):
-#       post_qs = Post.objects.filter(pk=pk)
-#       message = "Not allowed"
-#       if request.user.is_authenticated:
-#            is_liked, likes = Post.objects.like_toggle(request.user, post_qs.first())
-#            return Response({'liked': is_liked, 'likes':likes})
-#       return Response({"message": message}, status=400)
-
-
-
+class LikeToggleAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, pk, format=None):
+       comment_qs = Comment.objects.filter(pk=pk)
+       message = "Not allowed"
+       if request.user.is_authenticated:
+            is_liked, likes = Comment.objects.like_toggle(request.user, comment_qs.first())
+            return Response({'liked': is_liked, 'likes':likes})
+       return Response({"message": message}, status=400)
 
 
 class CommentCreateApiView(generics.CreateAPIView):
@@ -57,15 +54,12 @@ class CommentManagementApiView(UpdateModelMixin, DestroyModelMixin, generics.Ret
 	serializer_class = CommentDetailSerializer
 	permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 	queryset = Comment.objects.filter(id__gte=0)
-	
-
 
 	def put(self, request, *args, **kwargs):
 		return self.update(request, *args, **kwargs)
 
 	def delete(self, request, *args, **kwargs):
 		return self.destroy(request, *args, **kwargs)
-
 
 
 class CommentListApiView(generics.ListAPIView):
@@ -79,9 +73,6 @@ class CommentListApiView(generics.ListAPIView):
 		return context
 
 	def get_queryset(self, *args, **kwargs):
-		#requested_user = self.kwargs.get("username")
-		#print(requested_user)
 		qs = None
-		#if requested_user:
 		qs = Comment.objects.all()
 		return qs

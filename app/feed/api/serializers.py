@@ -49,6 +49,7 @@ class PostModelSerializer(serializers.ModelSerializer):
 	did_like = serializers.SerializerMethodField()
 	redirect_ = serializers.SerializerMethodField()
 	comments = serializers.SerializerMethodField()
+	total_comments = serializers.SerializerMethodField()
 
 	
 	class Meta:
@@ -59,6 +60,7 @@ class PostModelSerializer(serializers.ModelSerializer):
 			'content',
 			'created_at',
 			'date_display',
+			'total_comments',
 			'timesince',
 			'url',
 			'parent',
@@ -67,6 +69,7 @@ class PostModelSerializer(serializers.ModelSerializer):
 			'image',
 			'redirect_',
 			'comments',
+			
 		]
 
 	def get_redirect_(self, obj):
@@ -98,6 +101,9 @@ class PostModelSerializer(serializers.ModelSerializer):
 		c_qs = Comment.objects.filter_by_instance(obj)
 		comments = CommentModelSerializer(c_qs, many=True).data
 		return comments
+
+	def get_total_comments(self, obj):
+		return len(Comment.objects.filter(object_id=obj.id))
 
 	def update(self, instance, validated_data):
 		"""Update a user, setting the password correctly and return it"""

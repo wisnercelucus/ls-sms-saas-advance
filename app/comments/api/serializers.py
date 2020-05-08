@@ -69,10 +69,9 @@ class CommentModelSerializer(serializers.ModelSerializer):
 	timesince = serializers.SerializerMethodField()
 	url = serializers.SerializerMethodField()
 	reply_count = serializers.SerializerMethodField()
-	#likes = serializers.SerializerMethodField()
-	#did_like = serializers.SerializerMethodField()
-	#redirect_ = serializers.SerializerMethodField()
-
+	replies = serializers.SerializerMethodField()
+	did_like = serializers.SerializerMethodField()
+	likes = serializers.SerializerMethodField()
 	
 	class Meta:
 		model = Comment
@@ -87,24 +86,27 @@ class CommentModelSerializer(serializers.ModelSerializer):
 			'content_type',
 			'object_id',
 			'reply_count',
-			#'likes',
-			#'did_like',
-			#'redirect_',
+			'did_like',
+			'likes',
+			'replies',
 		]
 
-	#def get_redirect_(self, obj):
-	#	return '/feed'
+	def get_did_like(self, obj):
+		request = self.context.get("request")
+		if request:
+			if request.user.is_authenticated:
+				if request.user in obj.liked.all():
+					return True
+		return False
 
-	#def get_did_like(self, obj):
-	#	request = self.context.get("request")
-	#	if request:
-	#		if request.user.is_authenticated:
-	#			if request.user in obj.liked.all():
-	#				return True
-	#	return False
+	def get_likes(self, obj):
+		return obj.liked.all().count()	
 
-	#def get_likes(self, obj):
-	#	return obj.liked.all().count()
+	def get_replies(self, obj):
+		if obj.is_parent:	
+			replies = CommentChildSerializer(obj.children(), many=True).data
+			return replies
+		return None
 
 	def get_date_display(self, obj):
 		return obj.created_at.strftime("%b %d, %Y at %I:%M %p")
@@ -123,6 +125,8 @@ class CommentModelSerializer(serializers.ModelSerializer):
 
 class CommentChildSerializer(serializers.ModelSerializer):
 	user = UserModelSerializer(read_only=True)
+	did_like = serializers.SerializerMethodField()
+	likes = serializers.SerializerMethodField()
 	
 	class Meta:
 		model = Comment
@@ -133,8 +137,21 @@ class CommentChildSerializer(serializers.ModelSerializer):
 			'created_at',
 			'content_type',
 			'object_id',
+			'did_like',
+			'likes',
 
 		]
+
+	def get_did_like(self, obj):
+		request = self.context.get("request")
+		if request:
+			if request.user.is_authenticated:
+				if request.user in obj.liked.all():
+					return True
+		return False
+
+	def get_likes(self, obj):
+		return obj.liked.all().count()
 
 class CommentDetailSerializer(serializers.ModelSerializer):
 	user = UserModelSerializer(read_only=True)

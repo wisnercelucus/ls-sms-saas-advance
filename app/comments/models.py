@@ -37,6 +37,17 @@ class Commentmanager(models.Manager):
             return "Could note create it"
         return None
 
+    def like_toggle(self, user, comment_obj):
+        if user in comment_obj.liked.all():
+            is_liked = False
+            comment_obj.liked.remove(user)
+            likes = comment_obj.liked.all().count()
+        else:
+            is_liked = True
+            comment_obj.liked.add(user)
+            likes = comment_obj.liked.all().count()
+        return (is_liked, likes)
+
 
 class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -49,6 +60,7 @@ class Comment(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+    liked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="comment_liked", blank=True)
 
     objects = Commentmanager()
 

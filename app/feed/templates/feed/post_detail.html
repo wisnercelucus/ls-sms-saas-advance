@@ -16,7 +16,7 @@
         </div>
         <div class='col-sm-9 col-xs-12'>
             {{ object.content|safe }}
-            {{ object.created_at|timesince }} {% if object.comments.count > 0 %} | {{ object.comments.count }} Comments {% endif %}
+            {{ object.created_at|timesince }} {% if object.total_comments > 0 %} | {{ object.total_comments }} Comments {% endif %}
             <br/><br/>
             <div class="container comments">
                 <div class="">
