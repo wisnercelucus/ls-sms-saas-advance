@@ -1,6 +1,7 @@
 				{% load crispy_forms_tags %}
 				<form enctype="multipart/form-data" action="{% if action_url %}{{ action_url }}{% endif %}" {% if form_id %} id="{{ form_id }}" {% endif %} method="post">
                     {% csrf_token %}
+                    {{ form.media }}
                     {{ form.as_p }}
                     <button type='submit' class ='btn btn-primary'>{{ btn_title }}</button>
     			</form>

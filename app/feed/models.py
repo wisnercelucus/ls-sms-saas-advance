@@ -128,7 +128,7 @@ class Poll(models.Model):
         on_delete=models.CASCADE)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='poll_modifier',
         on_delete=models.CASCADE, null=True, blank=True)
-    post = models.OneToOneField(Post, on_delete=models.CASCADE)
+    post = models.OneToOneField(Post, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
