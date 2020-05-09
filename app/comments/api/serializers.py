@@ -17,6 +17,7 @@ def comment_create_serializer(model_type='post', pk=None, parent_id=None, user=N
 				'id',
 				'content',
 				'created_at',
+				'object_id',
 			]
 
 		def __init__(self, *args, **kwargs):
@@ -72,11 +73,13 @@ class CommentModelSerializer(serializers.ModelSerializer):
 	replies = serializers.SerializerMethodField()
 	did_like = serializers.SerializerMethodField()
 	likes = serializers.SerializerMethodField()
+
 	
 	class Meta:
 		model = Comment
 		fields = [
 		    'id',
+		    'liked',
 			'user',
 			'content',
 			'created_at',
@@ -92,7 +95,7 @@ class CommentModelSerializer(serializers.ModelSerializer):
 		]
 
 	def get_did_like(self, obj):
-		request = self.context.get("request")
+		request = self.context.get('request')
 		if request:
 			if request.user.is_authenticated:
 				if request.user in obj.liked.all():
@@ -133,6 +136,7 @@ class CommentChildSerializer(serializers.ModelSerializer):
 		fields = [
 			'id',
 			'user',
+			'liked',
 			'content',
 			'created_at',
 			'content_type',
@@ -171,6 +175,7 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 			'object_id',
 			'content_object_url',
 			'replies',
+			'liked',
 			
 		]
 

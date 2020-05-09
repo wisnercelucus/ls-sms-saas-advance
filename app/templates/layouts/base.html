@@ -153,12 +153,6 @@
             
       })
 
-
-
-
-
-
-
       $(document.body).on("click", ".btn-like-on-share", function(e){
             e.preventDefault()
             var this_ = $(this)
@@ -251,31 +245,34 @@
 
               if(value.content){
                   
-
-                  if(value.did_like){
+                  var req_user_id = {{ request.user.id }}
+                  var likes_list = value.liked
+                  if(likes_list.includes(req_user_id)){
                       verb1 = '<i class="fa fa-thumbs-up"></i> '
                       console.log('Value Did like')
                   }
 
                         var comments_reply_form = "<div class='container comment-reply-forms'>"+
                         "<form class='comment-form' method='POST'>"+
-                        "<div class='form-group'><div class='row'><div class='col-md-1 col-sm-1'><img class='avatar-xs' src='{{request.user.image.url}}'></div><div class='col-md-8 col-sm-8'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'><input class='form-control comment-content' type='text' placeholder='Comment...' name='content' required ><input type='hidden' name='content_type' value='post'><input type='hidden' name='object_id' value='"+ postValue.id +"'><input type=\"hidden\" name=\"parent_id\" value=\""+ value.id +"\"></div><div class='col-md-3 col-sm-3'><input class='btn btn-primary submit-comment' type='submit' name='submit' value='Reply'></div></div></div>"+
+                        "<div class='form-group'><div class='row'><div class='col-md-1 col-sm-1'><img class='avatar-xs' src='{{request.user.image.url}}'></div><div class='col-md-8 col-sm-8'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'><input class='form-control comment-content' type='text' placeholder='Comment...' name='content' required ><input type='hidden' name='content_type' value='post'><input type='hidden' name='object_id' value='"+ postValue.id +"'><input type=\"hidden\" name=\"parent_id\" value=\""+ value.id +"\"></div><div class='col-md-3 col-sm-3'><input class='btn btn-primary submit-comment' type='submit' name='submit' value='Reply' style=\"display:none;\"></div></div></div>"+
                         "</form></div>"
 
                     if(value.replies){
                       replies_thread="";
+
                       var j = 0;
                       $.each(value.replies, function(key, val){
                       if(j==1){
                         return;
                       }
-                        if(val.did_like){
-                              verb1 = '<i class="fa fa-thumbs-up></i> '
-                              console.log('Did like')
-                        }
+                      var rep_likes_list = val.liked
+                      var verb2 = '<i class="fa fa-thumbs-up" style="color:grey"></i> '
+                      if(rep_likes_list.includes(req_user_id)){
+                              verb2 = '<i class="fa fa-thumbs-up"></i> '
+                      }
                        replies_thread += "<div class=\"media comment-media container\">"+
                             "<img src=\""+ val.user.image +"\" class=\"avatar-xs mr-3\" alt=\"...\"></a><div class=\"media-body\"><strong class=\"mt-0\">"+  value.user.first_name + ' ' + 
-                        value.user.last_name  +"</strong><br><div class='comment-body'>"+  val.content +  "</div><div class='comment-group-action'><a class='btn-comment-like' href='/feed/comments/api/"+  val.id+"/like/'>"+ verb1 + "("+ val.likes +")" +"</a><a href='' class='comment-reply-api'>Reply</a></div></div></div>"  + comments_reply_form
+                        value.user.last_name  +"</strong><br><div class='comment-body'>"+  val.content +  "</div><div class='comment-group-action'><a class='btn-comment-like' href='/feed/comments/api/"+  val.id+"/like/'>"+ verb2 + "("+ val.likes +")" +"</a><a href='' class='comment-reply-api'>Reply</a></div></div></div>"  + comments_reply_form
                         j++;
                       })
 
@@ -295,7 +292,7 @@
 
         var comments_form = "<div class='container'>"+
           "<form class='comment-form' method='POST'>"+
-          "<div class='form-group'><div class='row'><div class='col-md-1 col-sm-1'><img class='avatar-xs' src='{{request.user.image.url}}'></div><div class='col-md-8 col-sm-8'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'><input class='form-control comment-content' type='text' placeholder='Comment...' name='content' required ><input type='hidden' name='content_type' value='post'><input type='hidden' name='object_id' value='"+ postValue.id +"'></div><div class='col-md-3 col-sm-3'><input class='btn btn-primary submit-comment' type='submit' name='submit' value='Comment'></div></div></div>"+
+          "<div class='form-group'><div class='row'><div class='col-md-1 col-sm-1'><img class='avatar-xs' src='{{request.user.image.url}}'></div><div class='col-md-8 col-sm-8'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'><input class='form-control comment-content' type='text' placeholder='Comment...' name='content' required ><input type='hidden' name='content_type' value='post'><input type='hidden' name='object_id' value='"+ postValue.id +"'></div><div class='col-md-3 col-sm-3'><input class='btn btn-primary submit-comment' type='submit' name='submit' style=\"display:none;\" value='Comment'></div></div></div>"+
           "</form></div>"
 
 
@@ -416,6 +413,9 @@
             method:'POST',
             success:function(data){
             this_.parent().parent().find("input[type=text]").val("")
+            window.location.href = '/feed/post/' + data.object_id
+            
+
             },
             error:function(data){
                console.log("an error occur...")

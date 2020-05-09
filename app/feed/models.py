@@ -119,6 +119,43 @@ class HashTag(models.Model):
 			)
         
 
+class Poll(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
+    question = models.TextField()
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='poll_modifier',
+        on_delete=models.CASCADE, null=True, blank=True)
+    post = models.OneToOneField(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.question
+
+
+class Option(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
+    value = models.CharField(max_length=250)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='option_modifier',
+        on_delete=models.CASCADE, null=True, blank=True)
+    
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.value
+
+
 def post_save_receiver(sender, instance, created, *args, **kwargs):
     if created and not instance.parent:
         # notify a user

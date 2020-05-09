@@ -47,6 +47,11 @@ class CommentDetailApiView(generics.RetrieveAPIView):
 	serializer_class = CommentDetailSerializer
 	permission_classes = [permissions.IsAuthenticated]
 	queryset = Comment.objects.filter(id__gte=0)
+
+	def get_serializer_context(self, *args, **kwargs):
+		context = super(CommentDetailApiView, self).get_serializer_context(*args, **kwargs)
+		context['request'] = self.request
+		return context
 	
 
 class CommentManagementApiView(UpdateModelMixin, DestroyModelMixin, generics.RetrieveAPIView):

@@ -22,7 +22,6 @@ class Commentmanager(models.Manager):
 
         if model_qs.exists():
             SomeModel = model_qs.first().model_class()
-            print(SomeModel)
             obj_qs = SomeModel.objects.filter(pk=pk)
             if obj_qs.exists():
                 instance = self.model()
